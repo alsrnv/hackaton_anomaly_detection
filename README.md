@@ -33,17 +33,15 @@
 
 ### Запуск с использованием Docker
 Клонируйте репозиторий:
-bash
-Copy code
+```bash
 git clone https://github.com/your_username/anomaly_detection.git
 cd anomaly_detection
+```
 Соберите Docker-образ:
-
-bash
-Copy code
+```bash
 docker-compose build
+```
 Запустите контейнер:
-
-bash
-Copy code
+```bash
 docker-compose up -d
+```
