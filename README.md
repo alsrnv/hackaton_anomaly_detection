@@ -30,3 +30,20 @@
    ```bash
    git clone https://github.com/your_username/anomaly_detection.git
    cd anomaly_detection
+
+### Запуск с использованием Docker
+Клонируйте репозиторий:
+bash
+Copy code
+git clone https://github.com/your_username/anomaly_detection.git
+cd anomaly_detection
+Соберите Docker-образ:
+
+bash
+Copy code
+docker-compose build
+Запустите контейнер:
+
+bash
+Copy code
+docker-compose up -d
