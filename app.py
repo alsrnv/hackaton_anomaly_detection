@@ -13,10 +13,12 @@ st.title("Обнаружение Аномалий во Временных Ряд
 
 # Загрузка данных
 df = pd.read_csv("metrics.csv")
-df['timestamp'] = pd.to_datetime(df['timestamp'], format='mixed')
 
-# # Преобразование столбца timestamp в формат datetime
-# df['timestamp'] = pd.to_datetime(df['timestamp'], dayfirst=True)
+# Преобразование столбца timestamp в формат datetime с обработкой разных форматов
+try:
+    df['timestamp'] = pd.to_datetime(df['timestamp'], format='mixed')
+except ValueError:
+    st.error("Ошибка преобразования столбца временных меток. Проверьте формат данных.")
 
 # Определение минимальной и максимальной даты в данных
 min_date = df['timestamp'].min()
@@ -70,6 +72,7 @@ if st.button("Рассчитать"):
             fig = go.Figure()
             fig.add_trace(go.Scatter(x=model_data['timestamp'], y=model_data['value'], mode='lines', name='Metric'))
             fig.add_trace(go.Scatter(x=model_data['timestamp'][model_data['is_anomaly']], y=model_data['value'][model_data['is_anomaly']], mode='markers', name='Anomaly', marker=dict(color='red')))
+            fig.update_layout(xaxis_range=[start_timestamp, end_timestamp])  # Установка диапазона оси X
             st.plotly_chart(fig)
 
             st.subheader("Данные")
