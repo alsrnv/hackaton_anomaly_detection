@@ -25,7 +25,7 @@ if st.button("Рассчитать"):
     st.write(f"Временная метка окончания: {end_timestamp}")
 
     # Загрузка данных
-    df = pd.read_csv("fake_anomalies.csv")
+    df = pd.read_csv("metrics.csv")
 
     # Получение уникальных значений метрик для создания вкладок
     unique_metrics = df["Метрика"].unique().tolist()
