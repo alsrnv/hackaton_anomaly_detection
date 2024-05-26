@@ -25,9 +25,9 @@ min_date = df['timestamp'].min()
 max_date = df['timestamp'].max()
 
 # Ввод временного окна с помощью календаря с минимальными и максимальными датами
-start_date = st.date_input("Дата начала", value=min_date)
+start_date = st.date_input("Дата начала", value=min_date, min_value=min_date, max_value=max_date)
 start_time = st.time_input("Время начала", value=pd.to_datetime(min_date).time())
-end_date = st.date_input("Дата окончания", value=max_date)
+end_date = st.date_input("Дата окончания", value=max_date, min_value=min_date, max_value=max_date)
 end_time = st.time_input("Время окончания", value=pd.to_datetime(max_date).time())
 
 start_timestamp = datetime.combine(start_date, start_time).strftime('%Y-%m-%d %H:%M:%S')
@@ -40,8 +40,14 @@ if st.button("Рассчитать"):
     # Фильтрация данных по временным меткам
     filtered_df = df[(df['timestamp'] >= start_timestamp) & (df['timestamp'] <= end_timestamp)]
 
-    # Получение уникальных значений метрик для создания вкладок
+    # Получение уникальных значений метрик и моделей для создания вкладок
     unique_metrics = filtered_df["Метрика"].unique().tolist()
+    unique_models = filtered_df["Модель"].unique().tolist()
+
+    # Убедимся, что Composite модель отображается последней
+    if "Composite" in unique_models:
+        unique_models.remove("Composite")
+        unique_models.append("Composite")
     
     tabs = st.tabs(unique_metrics)
 
@@ -53,17 +59,17 @@ if st.button("Рассчитать"):
             # Фильтрация данных по метрике
             metric_data = filtered_df[filtered_df["Метрика"] == metric]
 
-            # Prophet
-            st.subheader("Модель Prophet")
-            process_anomalies(metric_data, "Prophet")
-
-            # Isolation Forest
-            st.subheader("Модель Isolation Forest")
-            process_anomalies(metric_data, "Isolation Forest")
-
-            # Композитная модель
-            st.subheader("Общая модель (Композитная)")
-            process_anomalies(metric_data, "Composite")
+            # Отображение аномалий для каждой модели
+            for model in unique_models:
+                if model == "Composite":
+                    continue
+                st.subheader(f"Модель {model}")
+                process_anomalies(metric_data, model)
+            
+            # Отображение композитной модели внизу
+            if "Composite" in unique_models:
+                st.subheader("Общая модель (Композитная)")
+                process_anomalies(metric_data, "Composite")
 
     def process_anomalies(data, model_key):
         model_data = data[data["Модель"] == model_key]
