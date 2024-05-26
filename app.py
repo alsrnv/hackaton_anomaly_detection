@@ -13,9 +13,10 @@ st.title("Обнаружение Аномалий во Временных Ряд
 
 # Загрузка данных
 df = pd.read_csv("metrics.csv")
+df['timestamp'] = pd.to_datetime(df['timestamp'], format='mixed')
 
-# Преобразование столбца timestamp в формат datetime
-df['timestamp'] = pd.to_datetime(df['timestamp'], dayfirst=True)
+# # Преобразование столбца timestamp в формат datetime
+# df['timestamp'] = pd.to_datetime(df['timestamp'], dayfirst=True)
 
 # Определение минимальной и максимальной даты в данных
 min_date = df['timestamp'].min()
